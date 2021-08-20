@@ -60,7 +60,7 @@ print_usage()
   printf ("  --strength <s>        set watermark strength              [%.6g]\n", Params::water_delta * 1000);
   printf ("  --linear              disable non-linear bit storage\n");
   printf ("  --short <bits>        enable short payload mode\n");
-  printf ("  --key <file>          load watermarking key from file\n");
+  printf ("  --key <hex>           load watermarking key in hex\n");
   printf ("  -q, --quiet           disable information messages\n");
   printf ("\n");
   printf ("  --input-format raw    use raw stream as input\n");
@@ -92,7 +92,7 @@ print_usage_hls()
   printf ("Watermarking options:\n");
   printf ("  --strength <s>        set watermark strength              [%.6g]\n", Params::water_delta * 1000);
   printf ("  --short <bits>        enable short payload mode\n");
-  printf ("  --key <file>          load watermarking key from file\n");
+  printf ("  --key <hex>           load watermarking key in hex\n");
 }
 
 Format

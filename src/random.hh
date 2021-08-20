@@ -71,7 +71,7 @@ public:
   }
 
   static void        set_global_test_key (uint64_t seed);
-  static void        load_global_key (const std::string& key_file);
+  static void        load_global_key (const std::string& hex_key);
   static std::string gen_key();
 };
 

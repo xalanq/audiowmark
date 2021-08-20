@@ -179,61 +179,15 @@ Random::set_global_test_key (uint64_t key)
 }
 
 void
-Random::load_global_key (const string& key_file)
+Random::load_global_key (const string& hex_key)
 {
-  FILE *f = fopen (key_file.c_str(), "r");
-  if (!f)
+  vector<unsigned char> key = hex_str_to_vec (hex_key);
+  if (key.size() != aes_key.size())
     {
-      error ("audiowmark: error opening key file: '%s'\n", key_file.c_str());
+      error ("audiowmark: wrong key length of '%s'\n => required key length is %zd bits\n", hex_key.c_str(), aes_key.size() * 8);
       exit (1);
     }
-
-  const regex blank_re (R"(\s*(#.*)?[\r\n]+)");
-  const regex key_re (R"(\s*key\s+([0-9a-f]+)\s*(#.*)?[\r\n]+)");
-
-  char buffer[1024];
-  int line = 1;
-  int keys = 0;
-  while (fgets (buffer, 1024, f))
-    {
-      string s = buffer;
-
-      std::smatch match;
-      if (regex_match (s, blank_re))
-        {
-          /* blank line or comment */
-        }
-      else if (regex_match (s, match, key_re))
-        {
-          /* line containing aes key */
-          vector<unsigned char> key = hex_str_to_vec (match[1].str());
-          if (key.size() != aes_key.size())
-            {
-              error ("audiowmark: wrong key length in key file '%s', line %d\n => required key length is %zd bits\n", key_file.c_str(), line, aes_key.size() * 8);
-              exit (1);
-            }
-          aes_key = key;
-          keys++;
-        }
-      else
-        {
-          error ("audiowmark: parse error in key file '%s', line %d\n", key_file.c_str(), line);
-          exit (1);
-        }
-      line++;
-    }
-  fclose (f);
-
-  if (keys > 1)
-    {
-      error ("audiowmark: key file '%s' contains more than one key\n", key_file.c_str());
-      exit (1);
-    }
-  if (keys == 0)
-    {
-      error ("audiowmark: key file '%s' contains no key\n", key_file.c_str());
-      exit (1);
-    }
+  aes_key = key;
 }
 
 string
